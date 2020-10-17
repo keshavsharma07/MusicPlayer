@@ -4,59 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" <title>
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
-<link rel="stylesheet" href="css/style.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+        integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css" />
 
 
 </head>
-   <body>
+
+<body>
 
 
     <div class="main_div">
         <div class="music_container">
-             <h2 id="title">KYUN AAJKAL</h2>   
-             <h3 id="artist">Keshav Sharma</h3>
-                <div class="img_container">
-                    <img src="images/keshav.png"/>
-                </div>
-                <audio src="music/Kyun aajkal.mp3"></audio>
+            <h2 id="title">KYUN AAJKAL</h2>
+            <h3 id="artist">Keshav Sharma</h3>
+            <div class="img_container">
+                <img src="images/keshav.png" />
+            </div>
+            <audio src="music/keshav-2.mp3" id="song"></audio>
 
-                    <div class="music_controls">
-                        <i class="fas fa-backward" title="Previous" id="prev"></i>
-                        <i class="fas fa-play main-button" title="Play" id="play"></i>
-                        <i class="fas fa-forward " title="Next" id="next"></i>
-                        
-                    </div>
+            <div class="music_controls">
+                <i class="fas fa-backward" title="Previous" id="prev"></i>
+                <i class="fas fa-play main-button" title="Play" id="play"></i>
+                <i class="fas fa-forward " title="Next" id="next"></i>
+
+            </div>
 
         </div>
     </div>
 
     <script>
-        const music=document.querySelector('audio');
-        const img=document.querySelector('img');
-        const play= document.getElementById('play');
-        
+        const music = document.getElementById("song");
+        const img = document.querySelector('img');
+        const play = document.getElementById("play");
+        const artist = document.getElementById("artist");
+        const title = document.getElementById("title");
+        const previous = document.getElementById('previous');
+        const next = document.getElementById('next');
 
-       let isPlaying =false;
 
-        const playMusic =()=>{
-            isPlaying =true;
+
+        const songs = [{
+            name: "keshav-1",
+            title: "Kyun aajkal",
+            artist: "Keshav Sharma",
+        },
+        {
+            name: "keshav-2",
+            title: "Teri Meri Dosti",
+            artist: "Keshav Sharma",
+
+        },
+        {
+            name: "keshav-3",
+            title: "Mulaqatein",
+            artist: "Keshav Sharma",
+
+        },
+
+        ];
+
+        let isPlaying = false;
+
+        const playMusic = () => {
+            isPlaying = true;
             music.play();
-            play.classList.replace("fa-play","fa-pause");
+            play.classList.replace("fa-play", "fa-pause");
             img.classList.add("anime");
         };
 
         // Pause function
 
-        const pauseMusic = ()=>{
-            isPlaying =false;
+        const pauseMusic = () => {
+            isPlaying = false;
             music.pause();
-            play.classList.replace("fa-pause","fa-play");
+            play.classList.replace("fa-pause", "fa-play");
             img.classList.remove("anime");
         };
 
-        play.addEventListener('click',()=>{
+        play.addEventListener('click', () => {
             // if(isPlaying){
             //     pauseMusic();
             // }
@@ -64,12 +92,38 @@
             //     playMusic();
             // }
 
-            isPlaying ? pauseMusic() :playMusic();
+            isPlaying ? pauseMusic() : playMusic();
         })
 
+        const loadSong = (songs) => {
+            title.textContent = songs.title;
+            artist.textContent = songs.artist;
+            music.src = "music/" +songs.name+".mp3";
+    
+
+
+
+        };
+
+       let songIndex = 0;
+        //loadSong(songs[0]);
+
+        const nextSong = () => {
+            songIndex=(songIndex+1)%songs.length;
+            loadSong(songs[songIndex]);
+            playMusic();
+        }
+        const prevSong =() =>{
+            songIndex=(songIndex-1 + songs.length) % songs.length;
+            loadSong(songs[songIndex]);
+            playMusic();
+        }
+
+        next.addEventListener('click', nextSong);
+        prev.addEventListener('click', prevSong);
 
     </script>
-   </body>
+</body>
 
 
 </html>
