@@ -23,7 +23,18 @@
             <div class="img_container">
                 <img src="images/keshav.png" />
             </div>
-            <audio src="music/keshav-2.mp3" id="song"></audio>
+            <audio src="music/keshav-1.mp3" id="song"></audio>
+
+            <div class="progressbar_container">
+                <div class="progress_duration_meter">
+                    <div id="current_time">0:00</div>
+                    <div id="duration">2:44</div>
+
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
 
             <div class="music_controls">
                 <i class="fas fa-backward" title="Previous" id="prev"></i>
@@ -43,8 +54,10 @@
         const title = document.getElementById("title");
         const previous = document.getElementById('previous');
         const next = document.getElementById('next');
-
-
+        let progress = document.getElementById('progress');
+        let totalduration = document.getElementById('duration');
+        let current_time = document.getElementById('current_time');
+        const progress_div = document.getElementById('progress_div');
 
         const songs = [{
             name: "keshav-1",
@@ -98,26 +111,73 @@
         const loadSong = (songs) => {
             title.textContent = songs.title;
             artist.textContent = songs.artist;
-            music.src = "music/" +songs.name+".mp3";
-    
-
-
-
+            music.src = "music/" + songs.name + ".mp3";
         };
 
-       let songIndex = 0;
+        let songIndex = 0;
         //loadSong(songs[0]);
 
         const nextSong = () => {
-            songIndex=(songIndex+1)%songs.length;
+            songIndex = (songIndex + 1) % songs.length;
             loadSong(songs[songIndex]);
             playMusic();
         }
-        const prevSong =() =>{
-            songIndex=(songIndex-1 + songs.length) % songs.length;
+        const prevSong = () => {
+            songIndex = (songIndex - 1 + songs.length) % songs.length;
             loadSong(songs[songIndex]);
             playMusic();
         }
+
+        // PROGRESS JS WOrk
+
+        music.addEventListener("timeupdate", (event) => {
+            const { currentTime, duration } = event.srcElement;
+            let progress_time = (currentTime / duration) * 100;
+            progress.style.width = `${progress_time}%`;
+
+            // music duration update
+            let min_duration = Math.floor(duration / 60);
+            let sec_duration = Math.floor(duration % 60);
+            console.log(min_duration);
+            console.log(sec_duration);
+            let tot_duration = `${min_duration}:${sec_duration}`;
+            if (duration) {
+                totalduration.textContent = ` ${tot_duration}`;
+
+            }
+
+
+
+            //current time update
+            let min_current = Math.floor(currentTime / 60);
+            let sec_current = Math.floor(currentTime % 60);
+
+            if (sec_current < 10) {
+                sec_current = `0${sec_current}`;
+            }
+            let tot_current = `${min_current}:${sec_current}`;
+
+
+            current_time.textContent = ` ${tot_current}`;
+
+
+
+        });
+        // progress on click functionality
+
+        progress_div.addEventListener('click', (event) => {
+            const {duration } = music;
+            
+           let move_progress = (event.offsetX / event.srcElement.clientWidth)*duration;
+            console.log(move_progress);
+
+            music.currentTime=move_progress;
+        });
+
+
+
+        // NEXT SONG FUNCITON
+        music.addEventListener("ended", nextSong);
 
         next.addEventListener('click', nextSong);
         prev.addEventListener('click', prevSong);
